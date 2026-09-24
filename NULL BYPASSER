@@ -1,0 +1,759 @@
+--// NULL HUB GUI ONLY
+--// No HttpGet / loadstring / bypass / server spam
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local LP = Players.LocalPlayer
+if not LP then return end
+
+local pg = LP:WaitForChild("PlayerGui")
+
+pcall(function()
+	local old = pg:FindFirstChild("NULLBypassGui")
+	if old then
+		old:Destroy()
+	end
+end)
+
+--==================================================
+-- CONFIG
+--==================================================
+
+local RED = Color3.fromRGB(255, 40, 40)
+local GREEN = Color3.fromRGB(40, 220, 90)
+local WHITE = Color3.fromRGB(255, 255, 255)
+local BLACK = Color3.fromRGB(5, 5, 5)
+
+local MenuSizes = {
+	SMALL = UDim2.new(0, 210, 0, 310),
+	MEDIUM = UDim2.new(0, 240, 0, 354),
+	LARGE = UDim2.new(0, 280, 0, 410)
+}
+
+local CurrentMenuSize = "MEDIUM"
+local isMinimized = false
+local isActivated = false
+local currentDevice = "MOBILE"
+
+--==================================================
+-- SCREEN GUI
+--==================================================
+
+local NULLBypassGui = Instance.new("ScreenGui")
+NULLBypassGui.Name = "NULLBypassGui"
+NULLBypassGui.IgnoreGuiInset = true
+NULLBypassGui.ResetOnSpawn = false
+NULLBypassGui.DisplayOrder = 10
+NULLBypassGui.Parent = pg
+
+--==================================================
+-- MAIN
+--==================================================
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Active = true
+Main.Position = UDim2.new(0.5, -120, 0.5, -177)
+Main.Size = MenuSizes.MEDIUM
+Main.BackgroundColor3 = BLACK
+Main.BackgroundTransparency = 0.05
+Main.BorderSizePixel = 0
+Main.ClipsDescendants = true
+Main.Parent = NULLBypassGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 20)
+MainCorner.Parent = Main
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = RED
+MainStroke.Transparency = 0.3
+MainStroke.Parent = Main
+
+--==================================================
+-- BACKGROUND IMAGE
+--==================================================
+
+local ImageLabel = Instance.new("ImageLabel")
+ImageLabel.Name = "ImageLabel"
+ImageLabel.ZIndex = 1
+ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.BorderSizePixel = 0
+ImageLabel.Image = "rbxassetid://113251694197329"
+ImageLabel.ImageTransparency = 0.88
+ImageLabel.ScaleType = Enum.ScaleType.Crop
+ImageLabel.Parent = Main
+
+local ImageCorner = Instance.new("UICorner")
+ImageCorner.CornerRadius = UDim.new(0, 20)
+ImageCorner.Parent = ImageLabel
+
+--==================================================
+-- HEADER
+--==================================================
+
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.ZIndex = 3
+Header.Size = UDim2.new(1, 0, 0, 46)
+Header.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Header.BackgroundTransparency = 0.1
+Header.BorderSizePixel = 0
+Header.Parent = Main
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 20)
+HeaderCorner.Parent = Header
+
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.ZIndex = 4
+Title.Position = UDim2.new(0, 14, 0.5, -16)
+Title.Size = UDim2.new(1, -50, 0, 16)
+Title.BackgroundTransparency = 1
+Title.Text = "NULL HUB BYPASSER"
+Title.TextColor3 = WHITE
+Title.TextSize = 13
+Title.Font = Enum.Font.GothamBlack
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+local Discord = Instance.new("TextLabel")
+Discord.Name = "Discord"
+Discord.ZIndex = 4
+Discord.Position = UDim2.new(0, 14, 0.5, 2)
+Discord.Size = UDim2.new(1, -50, 0, 12)
+Discord.BackgroundTransparency = 1
+Discord.Text = "discord.gg/nullhub"
+Discord.TextColor3 = WHITE
+Discord.TextSize = 10
+Discord.Font = Enum.Font.GothamMedium
+Discord.TextXAlignment = Enum.TextXAlignment.Left
+Discord.Parent = Header
+
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Name = "MinimizeBtn"
+MinimizeBtn.ZIndex = 4
+MinimizeBtn.Position = UDim2.new(1, -36, 0.5, -11)
+MinimizeBtn.Size = UDim2.new(0, 22, 0, 22)
+MinimizeBtn.BackgroundColor3 = RED
+MinimizeBtn.BackgroundTransparency = 0.88
+MinimizeBtn.BorderSizePixel = 0
+MinimizeBtn.Text = "−"
+MinimizeBtn.TextColor3 = WHITE
+MinimizeBtn.TextSize = 14
+MinimizeBtn.Font = Enum.Font.GothamBlack
+MinimizeBtn.AutoButtonColor = false
+MinimizeBtn.Parent = Header
+
+local MinCorner = Instance.new("UICorner")
+MinCorner.CornerRadius = UDim.new(0, 7)
+MinCorner.Parent = MinimizeBtn
+
+local MinStroke = Instance.new("UIStroke")
+MinStroke.Color = RED
+MinStroke.Transparency = 0.5
+MinStroke.Parent = MinimizeBtn
+
+local HeaderFiller = Instance.new("Frame")
+HeaderFiller.Name = "HeaderFiller"
+HeaderFiller.ZIndex = 3
+HeaderFiller.Position = UDim2.new(0, 0, 0, 34)
+HeaderFiller.Size = UDim2.new(1, 0, 0, 12)
+HeaderFiller.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+HeaderFiller.BackgroundTransparency = 0.1
+HeaderFiller.BorderSizePixel = 0
+HeaderFiller.Parent = Main
+
+local Divider = Instance.new("Frame")
+Divider.Name = "Divider"
+Divider.ZIndex = 4
+Divider.Position = UDim2.new(0, 12, 0, 46)
+Divider.Size = UDim2.new(1, -24, 0, 1)
+Divider.BackgroundColor3 = RED
+Divider.BackgroundTransparency = 0.5
+Divider.BorderSizePixel = 0
+Divider.Parent = Main
+
+--==================================================
+-- CONTENT
+--==================================================
+
+local Content = Instance.new("Frame")
+Content.Name = "Content"
+Content.Position = UDim2.new(0, 0, 0, 47)
+Content.Size = UDim2.new(1, 0, 0, 245)
+Content.BackgroundTransparency = 1
+Content.BorderSizePixel = 0
+Content.Parent = Main
+
+--==================================================
+-- POWER
+--==================================================
+
+local PowerRingOuter = Instance.new("Frame")
+PowerRingOuter.Name = "PowerRingOuter"
+PowerRingOuter.ZIndex = 3
+PowerRingOuter.Position = UDim2.new(0.5, -57, 0, 14)
+PowerRingOuter.Size = UDim2.new(0, 114, 0, 114)
+PowerRingOuter.BackgroundColor3 = RED
+PowerRingOuter.BackgroundTransparency = 0.88
+PowerRingOuter.BorderSizePixel = 0
+PowerRingOuter.Parent = Content
+
+local c1 = Instance.new("UICorner")
+c1.CornerRadius = UDim.new(0, 57)
+c1.Parent = PowerRingOuter
+
+local s1 = Instance.new("UIStroke")
+s1.Color = RED
+s1.Thickness = 2.5
+s1.Transparency = 0.3
+s1.Parent = PowerRingOuter
+
+local PowerRingInner = Instance.new("Frame")
+PowerRingInner.Name = "PowerRingInner"
+PowerRingInner.ZIndex = 4
+PowerRingInner.Position = UDim2.new(0.5, -50, 0, 21)
+PowerRingInner.Size = UDim2.new(0, 100, 0, 100)
+PowerRingInner.BackgroundColor3 = BLACK
+PowerRingInner.BackgroundTransparency = 0.2
+PowerRingInner.BorderSizePixel = 0
+PowerRingInner.Parent = Content
+
+local c2 = Instance.new("UICorner")
+c2.CornerRadius = UDim.new(0, 50)
+c2.Parent = PowerRingInner
+
+local PowerLabel = Instance.new("TextLabel")
+PowerLabel.ZIndex = 5
+PowerLabel.Position = UDim2.new(0, 0, 0.5, -24)
+PowerLabel.Size = UDim2.new(1, 0, 0, 14)
+PowerLabel.BackgroundTransparency = 1
+PowerLabel.Text = "POWER"
+PowerLabel.TextColor3 = WHITE
+PowerLabel.TextSize = 11
+PowerLabel.Font = Enum.Font.GothamBlack
+PowerLabel.Parent = PowerRingInner
+
+local PowerValue = Instance.new("TextButton")
+PowerValue.ZIndex = 5
+PowerValue.Position = UDim2.new(0, 0, 0.5, -14)
+PowerValue.Size = UDim2.new(1, 0, 0, 36)
+PowerValue.BackgroundTransparency = 1
+PowerValue.Text = "72K"
+PowerValue.TextColor3 = WHITE
+PowerValue.TextSize = 26
+PowerValue.Font = Enum.Font.GothamBlack
+PowerValue.AutoButtonColor = false
+PowerValue.Parent = PowerRingInner
+
+local PowerInput = Instance.new("TextBox")
+PowerInput.Visible = false
+PowerInput.ZIndex = 6
+PowerInput.Position = UDim2.new(0, 0, 0.5, -14)
+PowerInput.Size = UDim2.new(1, 0, 0, 36)
+PowerInput.BackgroundTransparency = 1
+PowerInput.Text = "72000"
+PowerInput.TextColor3 = WHITE
+PowerInput.TextSize = 22
+PowerInput.Font = Enum.Font.GothamBlack
+PowerInput.ClearTextOnFocus = false
+PowerInput.TextXAlignment = Enum.TextXAlignment.Center
+PowerInput.Parent = PowerRingInner
+
+--==================================================
+-- DEVICE
+--==================================================
+
+local DeviceToggle = Instance.new("Frame")
+DeviceToggle.ZIndex = 3
+DeviceToggle.Position = UDim2.new(0.5, -80, 0, 136)
+DeviceToggle.Size = UDim2.new(0, 160, 0, 28)
+DeviceToggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+DeviceToggle.BackgroundTransparency = 0.4
+DeviceToggle.BorderSizePixel = 0
+DeviceToggle.Parent = Content
+
+local dc = Instance.new("UICorner")
+dc.CornerRadius = UDim.new(0, 14)
+dc.Parent = DeviceToggle
+
+local ds = Instance.new("UIStroke")
+ds.Color = RED
+ds.Transparency = 0.5
+ds.Parent = DeviceToggle
+
+local PCBtn = Instance.new("TextButton")
+PCBtn.ZIndex = 4
+PCBtn.Position = UDim2.new(0, 2, 0, 2)
+PCBtn.Size = UDim2.new(0.5, -3, 1, -4)
+PCBtn.BackgroundColor3 = RED
+PCBtn.BackgroundTransparency = 1
+PCBtn.BorderSizePixel = 0
+PCBtn.Text = "PC"
+PCBtn.TextColor3 = WHITE
+PCBtn.TextSize = 10
+PCBtn.Font = Enum.Font.GothamBlack
+PCBtn.AutoButtonColor = false
+PCBtn.Parent = DeviceToggle
+
+local pcc = Instance.new("UICorner")
+pcc.CornerRadius = UDim.new(0, 12)
+pcc.Parent = PCBtn
+
+local MobileBtn = Instance.new("TextButton")
+MobileBtn.ZIndex = 4
+MobileBtn.Position = UDim2.new(0.5, 1, 0, 2)
+MobileBtn.Size = UDim2.new(0.5, -3, 1, -4)
+MobileBtn.BackgroundColor3 = RED
+MobileBtn.BorderSizePixel = 0
+MobileBtn.Text = "MOBILE"
+MobileBtn.TextColor3 = WHITE
+MobileBtn.TextSize = 10
+MobileBtn.Font = Enum.Font.GothamBlack
+MobileBtn.AutoButtonColor = false
+MobileBtn.Parent = DeviceToggle
+
+local mobc = Instance.new("UICorner")
+mobc.CornerRadius = UDim.new(0, 12)
+mobc.Parent = MobileBtn
+
+--==================================================
+-- KEYBIND
+--==================================================
+
+local Keybind = Instance.new("TextButton")
+Keybind.ZIndex = 3
+Keybind.Position = UDim2.new(0, 20, 0, 172)
+Keybind.Size = UDim2.new(0, 200, 0, 34)
+Keybind.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Keybind.BackgroundTransparency = 0.5
+Keybind.BorderSizePixel = 0
+Keybind.Text = ""
+Keybind.AutoButtonColor = false
+Keybind.Parent = Content
+
+local kc = Instance.new("UICorner")
+kc.CornerRadius = UDim.new(0, 11)
+kc.Parent = Keybind
+
+local ks = Instance.new("UIStroke")
+ks.Color = RED
+ks.Transparency = 0.5
+ks.Parent = Keybind
+
+local KeyLabel = Instance.new("TextLabel")
+KeyLabel.ZIndex = 4
+KeyLabel.Position = UDim2.new(0, 12, 0, 0)
+KeyLabel.Size = UDim2.new(0.5, 0, 1, 0)
+KeyLabel.BackgroundTransparency = 1
+KeyLabel.Text = "Keybind"
+KeyLabel.TextColor3 = WHITE
+KeyLabel.TextSize = 10
+KeyLabel.Font = Enum.Font.GothamBold
+KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
+KeyLabel.Parent = Keybind
+
+local KeyValue = Instance.new("TextLabel")
+KeyValue.ZIndex = 4
+KeyValue.Position = UDim2.new(0.5, 0, 0, 0)
+KeyValue.Size = UDim2.new(0.5, -12, 1, 0)
+KeyValue.BackgroundTransparency = 1
+KeyValue.Text = "Press keybind..."
+KeyValue.TextColor3 = WHITE
+KeyValue.TextSize = 10
+KeyValue.Font = Enum.Font.GothamBlack
+KeyValue.TextXAlignment = Enum.TextXAlignment.Right
+KeyValue.Parent = Keybind
+
+--==================================================
+-- SIZE BUTTONS
+--==================================================
+
+local SizeFrame = Instance.new("Frame")
+SizeFrame.Name = "SizeFrame"
+SizeFrame.ZIndex = 8
+SizeFrame.Position = UDim2.new(0, 20, 0, 212)
+SizeFrame.Size = UDim2.new(0, 200, 0, 34)
+SizeFrame.BackgroundTransparency = 1
+SizeFrame.Parent = Content
+
+local SizeLayout = Instance.new("UIListLayout")
+SizeLayout.FillDirection = Enum.FillDirection.Horizontal
+SizeLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SizeLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+SizeLayout.Padding = UDim.new(0, 5)
+SizeLayout.Parent = SizeFrame
+
+local function makeSizeButton(text)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 63, 0, 28)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.BackgroundTransparency = 0.2
+	btn.BorderSizePixel = 0
+	btn.Text = text
+	btn.TextColor3 = WHITE
+	btn.TextSize = 9
+	btn.Font = Enum.Font.GothamBlack
+	btn.AutoButtonColor = false
+	btn.ZIndex = 9
+	btn.Parent = SizeFrame
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 9)
+	corner.Parent = btn
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = RED
+	stroke.Transparency = 0.4
+	stroke.Parent = btn
+
+	return btn
+end
+
+local SmallBtn = makeSizeButton("SMALL")
+local MediumBtn = makeSizeButton("MEDIUM")
+local LargeBtn = makeSizeButton("LARGE")
+
+--==================================================
+-- ACTIVATE
+--==================================================
+
+local ActivateBtn = Instance.new("TextButton")
+ActivateBtn.Name = "ActivateBtn"
+ActivateBtn.ZIndex = 10
+ActivateBtn.Position = UDim2.new(0, 20, 0, 252)
+ActivateBtn.Size = UDim2.new(0, 200, 0, 40)
+ActivateBtn.BackgroundColor3 = RED
+ActivateBtn.BorderSizePixel = 0
+ActivateBtn.Text = "ACTIVATE"
+ActivateBtn.TextColor3 = WHITE
+ActivateBtn.TextSize = 13
+ActivateBtn.Font = Enum.Font.GothamBlack
+ActivateBtn.AutoButtonColor = false
+ActivateBtn.Parent = Main
+
+local ac = Instance.new("UICorner")
+ac.CornerRadius = UDim.new(0, 14)
+ac.Parent = ActivateBtn
+
+local ActivateStroke = Instance.new("UIStroke")
+ActivateStroke.Color = RED
+ActivateStroke.Transparency = 0.3
+ActivateStroke.Parent = ActivateBtn
+
+--==================================================
+-- COMPACT
+--==================================================
+
+local CompactContainer = Instance.new("Frame")
+CompactContainer.Size = UDim2.new(1, 0, 1, 0)
+CompactContainer.BackgroundTransparency = 1
+CompactContainer.Visible = false
+CompactContainer.ZIndex = 10
+CompactContainer.Parent = Main
+
+local CompactTitle = Instance.new("TextLabel")
+CompactTitle.Position = UDim2.new(0, 16, 0, 14)
+CompactTitle.Size = UDim2.new(1, -60, 0, 18)
+CompactTitle.BackgroundTransparency = 1
+CompactTitle.Text = "NULL HUB BYPASSER"
+CompactTitle.TextColor3 = WHITE
+CompactTitle.TextSize = 15
+CompactTitle.Font = Enum.Font.GothamBlack
+CompactTitle.TextXAlignment = Enum.TextXAlignment.Left
+CompactTitle.ZIndex = 11
+CompactTitle.Parent = CompactContainer
+
+local CompactDiscord = Instance.new("TextLabel")
+CompactDiscord.Position = UDim2.new(0, 16, 0, 32)
+CompactDiscord.Size = UDim2.new(1, -60, 0, 14)
+CompactDiscord.BackgroundTransparency = 1
+CompactDiscord.Text = "discord.gg/nullhub"
+CompactDiscord.TextColor3 = WHITE
+CompactDiscord.TextSize = 11
+CompactDiscord.Font = Enum.Font.GothamMedium
+CompactDiscord.TextXAlignment = Enum.TextXAlignment.Left
+CompactDiscord.ZIndex = 11
+CompactDiscord.Parent = CompactContainer
+
+local ExpandBtn = Instance.new("TextButton")
+ExpandBtn.Position = UDim2.new(1, -38, 0, 16)
+ExpandBtn.Size = UDim2.new(0, 26, 0, 26)
+ExpandBtn.BackgroundColor3 = RED
+ExpandBtn.BackgroundTransparency = 0.85
+ExpandBtn.BorderSizePixel = 0
+ExpandBtn.Text = "+"
+ExpandBtn.TextColor3 = WHITE
+ExpandBtn.TextSize = 18
+ExpandBtn.Font = Enum.Font.GothamBlack
+ExpandBtn.AutoButtonColor = false
+ExpandBtn.ZIndex = 12
+ExpandBtn.Parent = CompactContainer
+
+local ec = Instance.new("UICorner")
+ec.CornerRadius = UDim.new(0, 8)
+ec.Parent = ExpandBtn
+
+local CompactActivate = Instance.new("TextButton")
+CompactActivate.Position = UDim2.new(0, 16, 0, 58)
+CompactActivate.Size = UDim2.new(1, -32, 0, 40)
+CompactActivate.BackgroundColor3 = RED
+CompactActivate.BorderSizePixel = 0
+CompactActivate.Text = "ACTIVATE"
+CompactActivate.TextColor3 = WHITE
+CompactActivate.TextSize = 14
+CompactActivate.Font = Enum.Font.GothamBlack
+CompactActivate.AutoButtonColor = false
+CompactActivate.ZIndex = 11
+CompactActivate.Parent = CompactContainer
+
+local cac = Instance.new("UICorner")
+cac.CornerRadius = UDim.new(0, 12)
+cac.Parent = CompactActivate
+
+--==================================================
+-- MINIMIZE
+--==================================================
+
+local function setNormalVisible(value)
+	Header.Visible = value
+	Content.Visible = value
+	ActivateBtn.Visible = value
+	HeaderFiller.Visible = value
+	Divider.Visible = value
+	MinimizeBtn.Visible = value
+end
+
+local function minimize()
+	if isMinimized then return end
+
+	isMinimized = true
+	setNormalVisible(false)
+	CompactContainer.Visible = true
+
+	TweenService:Create(
+		Main,
+		TweenInfo.new(0.38, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+		{
+			Size = UDim2.new(0, 280, 0, 110),
+			Position = UDim2.new(0.5, -140, 0.5, -55)
+		}
+	):Play()
+end
+
+local function expand()
+	if not isMinimized then return end
+
+	isMinimized = false
+	CompactContainer.Visible = false
+	setNormalVisible(true)
+
+	local size = MenuSizes[CurrentMenuSize]
+
+	TweenService:Create(
+		Main,
+		TweenInfo.new(0.42, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+		{
+			Size = size,
+			Position = UDim2.new(
+				0.5,
+				-size.X.Offset / 2,
+				0.5,
+				-size.Y.Offset / 2
+			)
+		}
+	):Play()
+end
+
+MinimizeBtn.MouseButton1Click:Connect(minimize)
+ExpandBtn.MouseButton1Click:Connect(expand)
+
+--==================================================
+-- SIZE SYSTEM
+--==================================================
+
+local function SetMenuSize(sizeName)
+	local size = MenuSizes[sizeName]
+	if not size then return end
+
+	CurrentMenuSize = sizeName
+
+	if isMinimized then
+		return
+	end
+
+	TweenService:Create(
+		Main,
+		TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+		{
+			Size = size,
+			Position = UDim2.new(
+				0.5,
+				-size.X.Offset / 2,
+				0.5,
+				-size.Y.Offset / 2
+			)
+		}
+	):Play()
+end
+
+SmallBtn.MouseButton1Click:Connect(function()
+	SetMenuSize("SMALL")
+end)
+
+MediumBtn.MouseButton1Click:Connect(function()
+	SetMenuSize("MEDIUM")
+end)
+
+LargeBtn.MouseButton1Click:Connect(function()
+	SetMenuSize("LARGE")
+end)
+
+--==================================================
+-- POWER INPUT
+--==================================================
+
+local function formatPower(num)
+	if num >= 1000 then
+		return tostring(math.floor(num / 1000)) .. "K"
+	end
+
+	return tostring(num)
+end
+
+PowerValue.MouseButton1Click:Connect(function()
+	PowerValue.Visible = false
+	PowerInput.Visible = true
+	PowerInput:CaptureFocus()
+end)
+
+PowerInput.FocusLost:Connect(function()
+	local text = PowerInput.Text:gsub("%D", "")
+	local num = tonumber(text) or 1
+
+	num = math.clamp(num, 1, 999999)
+
+	PowerInput.Text = tostring(num)
+	PowerValue.Text = formatPower(num)
+
+	PowerInput.Visible = false
+	PowerValue.Visible = true
+end)
+
+--==================================================
+-- ACTIVATE VISUAL
+--==================================================
+
+local function updateActivateVisual()
+	if isActivated then
+		ActivateBtn.BackgroundColor3 = GREEN
+		ActivateBtn.Text = "DEACTIVATE"
+		ActivateStroke.Color = GREEN
+
+		CompactActivate.BackgroundColor3 = GREEN
+		CompactActivate.Text = "DEACTIVATE"
+	else
+		ActivateBtn.BackgroundColor3 = RED
+		ActivateBtn.Text = "ACTIVATE"
+		ActivateStroke.Color = RED
+
+		CompactActivate.BackgroundColor3 = RED
+		CompactActivate.Text = "ACTIVATE"
+	end
+end
+
+local function onActivate()
+	isActivated = not isActivated
+	updateActivateVisual()
+end
+
+ActivateBtn.MouseButton1Click:Connect(onActivate)
+CompactActivate.MouseButton1Click:Connect(onActivate)
+
+--==================================================
+-- DEVICE
+--==================================================
+
+local function setDevice(device)
+	currentDevice = device
+
+	if device == "MOBILE" then
+		MobileBtn.BackgroundTransparency = 0
+		PCBtn.BackgroundTransparency = 1
+
+		PowerValue.Text = "72K"
+		PowerInput.Text = "72000"
+	else
+		PCBtn.BackgroundTransparency = 0
+		MobileBtn.BackgroundTransparency = 1
+
+		PowerValue.Text = "97K"
+		PowerInput.Text = "97000"
+	end
+end
+
+PCBtn.MouseButton1Click:Connect(function()
+	setDevice("PC")
+end)
+
+MobileBtn.MouseButton1Click:Connect(function()
+	setDevice("MOBILE")
+end)
+
+setDevice("MOBILE")
+
+--==================================================
+-- DRAG
+--==================================================
+
+local dragging = false
+local dragStart
+local startPos
+
+local function update(input)
+	local delta = input.Position - dragStart
+
+	Main.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
+
+Main.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	) then
+		update(input)
+	end
+end)
+
+--==================================================
+-- START
+--==================================================
+
+SetMenuSize("MEDIUM")
+updateActivateVisual()
